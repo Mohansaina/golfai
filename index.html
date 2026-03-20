@@ -1,621 +1,761 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Golf.ai · Phone Admin — Interactive Demo</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Golf Course AI Studio — Powered by Claude</title>
 <style>
-:root {
-  --g9:#1b4332;--g8:#2d6a4f;--g7:#40916c;--g6:#52b788;--g4:#95d5b2;
-  --g1:#d8f3dc;--gold:#f0c040;--bg:#0d1f16;--s1:#162d20;--s2:#1e3d2a;
-  --s3:#243f2e;--bd:rgba(82,183,136,.18);--tx:#e8f5ee;--mt:#7bb89a;
-  --r:12px;
-}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--tx);height:100vh;display:flex;flex-direction:column;overflow:hidden}
+:root{
+  --green:#1a4731;--green2:#2d6a4f;--green3:#40916c;--green4:#52b788;
+  --gold:#f0c040;--gold2:#d4a017;--bg:#0d1b13;--card:#12251a;--card2:#1a3326;
+  --text:#e8f5e9;--muted:#7db896;--border:#2d4f3a;--red:#e74c3c;
+}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
 
-/* HEADER */
-header{background:var(--s1);border-bottom:1px solid var(--bd);padding:0 28px;height:58px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px}
-.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--g7),var(--g6));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px}
-.logo-tag{font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--mt)}
-.header-pill{display:flex;align-items:center;gap:7px;background:rgba(82,183,136,.1);border:1px solid rgba(82,183,136,.28);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;color:var(--g4)}
-.dot{width:7px;height:7px;background:var(--g6);border-radius:50%;animation:blink 1.8s ease infinite}
-.powered{font-size:11px;color:var(--mt);opacity:.7}
+/* NAV */
+nav{background:var(--green);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px;border-bottom:2px solid var(--gold)}
+.logo{font-size:1.4rem;font-weight:700;color:var(--gold);letter-spacing:-0.5px}
+.logo span{color:#fff}
+.nav-badge{background:var(--gold);color:#000;font-size:0.7rem;font-weight:700;padding:3px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:1px}
 
-/* LAYOUT */
-main{display:grid;grid-template-columns:430px 1fr;flex:1;overflow:hidden}
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);padding:3rem 2rem;text-align:center;border-bottom:1px solid var(--border)}
+.hero h1{font-size:2.4rem;font-weight:800;margin-bottom:0.8rem;line-height:1.2}
+.hero h1 span{color:var(--gold)}
+.hero p{font-size:1.1rem;color:#b2dfdb;max-width:600px;margin:0 auto 1.5rem}
+.hero-steps{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;margin-top:1rem}
+.step{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:12px;padding:0.8rem 1.2rem;font-size:0.85rem;display:flex;align-items:center;gap:0.5rem}
+.step-num{background:var(--gold);color:#000;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;flex-shrink:0}
 
-/* PHONE PANEL */
-.phone{background:var(--s1);border-right:1px solid var(--bd);display:flex;flex-direction:column;overflow:hidden}
-.phone-top{padding:20px 20px 0;flex-shrink:0}
-.sec-label{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--mt);margin-bottom:12px}
+/* MAIN LAYOUT */
+.main{display:grid;grid-template-columns:420px 1fr;gap:0;min-height:calc(100vh - 60px - 160px)}
+@media(max-width:900px){.main{grid-template-columns:1fr}}
 
-/* SCENARIO PICKER */
-.scenario-card{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:18px;margin-bottom:0}
-.pick-label{font-size:12px;color:var(--mt);margin-bottom:10px}
-.scenarios{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.sc{background:var(--s3);border:1px solid var(--bd);color:var(--tx);border-radius:9px;padding:10px 11px;font-size:11px;cursor:pointer;text-align:left;line-height:1.45;transition:all .2s;border-left:3px solid transparent}
-.sc:hover,.sc.active{border-left-color:var(--g6);background:rgba(82,183,136,.09);border-color:rgba(82,183,136,.35)}
-.sc em{display:block;font-size:9px;color:var(--g4);font-style:normal;font-weight:700;letter-spacing:.6px;margin-bottom:3px;text-transform:uppercase}
-.play-btn{width:100%;background:linear-gradient(135deg,var(--g7),var(--g6));color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;box-shadow:0 4px 18px rgba(64,145,108,.32)}
-.play-btn:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(64,145,108,.42)}
-.play-btn:disabled{opacity:.45;transform:none;cursor:not-allowed}
+/* LEFT PANEL — FORM */
+.form-panel{background:var(--card);border-right:1px solid var(--border);padding:1.5rem;overflow-y:auto;max-height:calc(100vh - 220px)}
+.form-section{margin-bottom:1.5rem}
+.section-title{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:0.8rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border)}
+.form-group{margin-bottom:0.8rem}
+label{display:block;font-size:0.82rem;color:var(--muted);margin-bottom:0.3rem}
+input,textarea,select{width:100%;background:var(--card2);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.7rem;border-radius:6px;font-size:0.88rem;transition:border-color 0.2s}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--green4)}
+textarea{resize:vertical;min-height:70px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem}
+.gen-btn{width:100%;background:linear-gradient(135deg,var(--gold) 0%,var(--gold2) 100%);color:#000;border:none;padding:0.85rem;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:0.5rem;transition:transform 0.1s,box-shadow 0.2s;display:flex;align-items:center;justify-content:center;gap:0.5rem}
+.gen-btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(240,192,64,0.4)}
+.gen-btn:active{transform:translateY(0)}
+.gen-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none}
+.demo-btn{width:100%;background:transparent;border:1px solid var(--green4);color:var(--green4);padding:0.6rem;border-radius:8px;font-size:0.85rem;cursor:pointer;margin-top:0.5rem;transition:background 0.2s}
+.demo-btn:hover{background:rgba(82,183,136,0.1)}
 
-/* CALL UI */
-.call-header{display:none;background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:14px 16px;flex-shrink:0;margin-top:0}
-.call-header.show{display:flex;align-items:center;justify-content:space-between}
-.call-num{font-size:16px;font-weight:700}
-.call-timer{font-size:12px;color:var(--g4);margin-top:2px}
-.end-btn{background:#ef4444;color:#fff;border:none;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer}
+/* RIGHT PANEL — OUTPUT */
+.output-panel{background:var(--card2);display:flex;flex-direction:column}
+.tabs{display:flex;background:var(--card);border-bottom:1px solid var(--border)}
+.tab{flex:1;padding:0.85rem;text-align:center;cursor:pointer;font-size:0.85rem;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;transition:all 0.2s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold);background:var(--card2)}
+.tab-content{flex:1;overflow-y:auto;padding:1.5rem;display:none;max-height:calc(100vh - 300px)}
+.tab-content.active{display:block}
 
-/* RINGING */
-.ring-overlay{display:none;position:absolute;inset:0;background:rgba(13,31,22,.92);backdrop-filter:blur(4px);z-index:20;flex-direction:column;align-items:center;justify-content:center;gap:16px}
-.ring-overlay.show{display:flex}
-.ring-circle{width:90px;height:90px;background:linear-gradient(135deg,var(--g7),var(--g6));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:40px;animation:ring 1s ease infinite}
-.ring-num{font-size:22px;font-weight:700;text-align:center}
-.ring-sub{font-size:13px;color:var(--mt)}
-.ring-btns{display:flex;gap:14px;margin-top:8px}
-.ans{background:#22c55e;color:#fff;border:none;border-radius:12px;padding:14px 28px;font-size:15px;font-weight:700;cursor:pointer}
-.dec{background:#ef4444;color:#fff;border:none;border-radius:12px;padding:14px 28px;font-size:15px;font-weight:700;cursor:pointer}
+/* EMPTY STATE */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;min-height:300px;text-align:center;color:var(--muted)}
+.empty-state svg{width:64px;height:64px;margin-bottom:1rem;opacity:0.3}
+.empty-state h3{font-size:1.1rem;margin-bottom:0.5rem;color:var(--text)}
+.empty-state p{font-size:0.88rem;max-width:280px}
 
-/* TRANSCRIPT */
-.transcript{flex:1;overflow-y:auto;padding:14px 20px;display:flex;flex-direction:column;gap:10px}
-.transcript::-webkit-scrollbar{width:3px}
-.transcript::-webkit-scrollbar-thumb{background:var(--s3);border-radius:3px}
-.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--mt);font-size:13px;gap:8px;opacity:.6}
+/* OUTPUT BLOCKS */
+.output-block{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:1rem}
+.output-block h3{font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:0.8rem}
+.persona-name{font-size:1.8rem;font-weight:700;color:var(--text);margin-bottom:0.4rem}
+.persona-tagline{font-size:1rem;color:var(--green4);font-style:italic;margin-bottom:0.8rem}
+.persona-desc{font-size:0.9rem;line-height:1.6;color:#b2dfdb}
+.traits{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.8rem}
+.trait{background:rgba(82,183,136,0.15);border:1px solid rgba(82,183,136,0.3);color:var(--green4);padding:3px 10px;border-radius:20px;font-size:0.78rem}
+.faq-item{border-bottom:1px solid var(--border);padding:0.8rem 0}
+.faq-item:last-child{border-bottom:none}
+.faq-q{font-weight:600;font-size:0.9rem;color:var(--text);margin-bottom:0.3rem}
+.faq-a{font-size:0.85rem;color:#b2dfdb;line-height:1.5}
+.script-block{background:var(--bg);border-left:3px solid var(--gold);padding:1rem;border-radius:0 8px 8px 0;font-size:0.88rem;line-height:1.7;color:#b2dfdb;white-space:pre-wrap;font-family:inherit;margin-bottom:1rem}
+.copy-btn{background:transparent;border:1px solid var(--border);color:var(--muted);padding:4px 12px;border-radius:6px;font-size:0.78rem;cursor:pointer;float:right;transition:all 0.2s}
+.copy-btn:hover{border-color:var(--green4);color:var(--green4)}
 
-.msg{display:flex;flex-direction:column;max-width:90%;animation:pop .22s ease}
-.msg.caller{align-self:flex-start}
-.msg.ai{align-self:flex-end}
-.msg-who{font-size:9.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px;color:var(--mt)}
-.msg.ai .msg-who{text-align:right;color:var(--g4)}
-.bubble{padding:11px 14px;border-radius:10px;font-size:13.5px;line-height:1.58}
-.msg.caller .bubble{background:var(--s3);border:1px solid var(--bd);border-radius:10px 10px 10px 2px}
-.msg.ai .bubble{background:rgba(64,145,108,.17);border:1px solid rgba(82,183,136,.24);border-radius:10px 10px 2px 10px;color:var(--g1)}
+/* LIVE CHAT */
+.chat-wrapper{display:flex;flex-direction:column;height:100%}
+.chat-persona-bar{background:var(--green);border-radius:8px;padding:0.8rem 1rem;display:flex;align-items:center;gap:0.8rem;margin-bottom:1rem}
+.persona-avatar{width:40px;height:40px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#000;font-size:1.1rem;flex-shrink:0}
+.persona-info{flex:1}
+.persona-info strong{display:block;font-size:0.95rem}
+.persona-info span{font-size:0.78rem;color:#b2dfdb}
+.online-dot{width:8px;height:8px;background:#4caf50;border-radius:50;display:inline-block;margin-right:4px}
+.chat-messages{flex:1;overflow-y:auto;min-height:200px;max-height:350px;margin-bottom:1rem;display:flex;flex-direction:column;gap:0.6rem}
+.msg{max-width:80%;padding:0.7rem 1rem;border-radius:12px;font-size:0.88rem;line-height:1.5;animation:msgIn 0.2s ease}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.msg.user{align-self:flex-end;background:var(--green2);color:#fff;border-bottom-right-radius:3px}
+.msg.ai{align-self:flex-start;background:var(--card);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:3px}
+.msg.typing{background:var(--card);border:1px solid var(--border)}
+.typing-dots{display:flex;gap:4px;padding:2px 4px}
+.typing-dots span{width:6px;height:6px;background:var(--muted);border-radius:50%;animation:bounce 1.2s infinite}
+.typing-dots span:nth-child(2){animation-delay:0.2s}
+.typing-dots span:nth-child(3){animation-delay:0.4s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-8px)}}
+.chat-input-row{display:flex;gap:0.5rem}
+.chat-input-row input{flex:1;padding:0.7rem 1rem;font-size:0.9rem}
+.send-btn{background:var(--green3);color:#fff;border:none;padding:0.7rem 1.2rem;border-radius:6px;cursor:pointer;font-size:0.9rem;transition:background 0.2s}
+.send-btn:hover{background:var(--green4)}
+.send-btn:disabled{opacity:0.5;cursor:not-allowed}
+.no-persona-msg{text-align:center;color:var(--muted);padding:2rem;font-size:0.9rem}
+.quick-qs{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.8rem}
+.quick-q{background:transparent;border:1px solid var(--border);color:var(--muted);padding:4px 10px;border-radius:20px;font-size:0.78rem;cursor:pointer;transition:all 0.2s}
+.quick-q:hover{border-color:var(--green4);color:var(--green4)}
 
-.typing .bubble{display:flex;gap:5px;align-items:center;padding:13px 16px}
-.td{width:7px;height:7px;background:var(--g6);border-radius:50%;animation:td 1.1s ease infinite}
-.td:nth-child(2){animation-delay:.18s}
-.td:nth-child(3){animation-delay:.36s}
+/* STREAMING */
+.streaming-bar{background:var(--green);border-radius:8px;padding:0.6rem 1rem;font-size:0.82rem;display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;display:none}
+.streaming-bar.show{display:flex}
+.pulse{width:8px;height:8px;background:var(--gold);border-radius:50%;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:0.7}}
 
-.sys-line{text-align:center;font-size:11px;color:var(--mt);padding:4px 0;opacity:.75}
+/* API KEY MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:100;display:none;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;width:100%;max-width:460px;margin:1rem}
+.modal h2{font-size:1.4rem;margin-bottom:0.5rem}
+.modal h2 span{color:var(--gold)}
+.modal p{color:var(--muted);font-size:0.9rem;margin-bottom:1.2rem;line-height:1.5}
+.modal input{margin-bottom:0.8rem;padding:0.7rem 1rem;font-size:0.95rem}
+.modal-btn{width:100%;background:var(--gold);color:#000;border:none;padding:0.8rem;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.95rem;margin-bottom:0.5rem}
+.modal-skip{width:100%;background:transparent;border:1px solid var(--border);color:var(--muted);padding:0.7rem;border-radius:8px;cursor:pointer;font-size:0.88rem}
+.modal-skip:hover{border-color:var(--green4);color:var(--green4)}
+.key-hint{font-size:0.75rem;color:var(--muted);text-align:center;margin-top:0.5rem}
+.key-hint a{color:var(--green4);text-decoration:none}
 
-/* RESET AREA */
-.reset-wrap{padding:12px 20px;border-top:1px solid var(--bd);flex-shrink:0}
-.reset-btn{width:100%;background:var(--s2);border:1px solid var(--bd);color:var(--mt);border-radius:9px;padding:10px;font-size:12px;cursor:pointer;transition:all .2s}
-.reset-btn:hover{border-color:var(--g6);color:var(--tx)}
+/* TOAST */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--green2);color:#fff;padding:0.7rem 1.2rem;border-radius:8px;font-size:0.88rem;transform:translateY(100px);transition:transform 0.3s;z-index:200;display:flex;align-items:center;gap:0.5rem}
+.toast.show{transform:none}
 
-/* DASHBOARD */
-.dash{overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:22px}
-.dash::-webkit-scrollbar{width:3px}
-.dash::-webkit-scrollbar-thumb{background:var(--s2);border-radius:3px}
+/* STATUS */
+.api-status{font-size:0.78rem;padding:3px 10px;border-radius:20px;font-weight:600}
+.api-status.live{background:rgba(76,175,80,0.2);color:#4caf50;border:1px solid rgba(76,175,80,0.3)}
+.api-status.demo{background:rgba(240,192,64,0.15);color:var(--gold);border:1px solid rgba(240,192,64,0.3)}
 
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.stat{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:16px}
-.stat-l{font-size:11px;color:var(--mt);margin-bottom:5px}
-.stat-v{font-size:28px;font-weight:800;line-height:1;color:var(--g4)}
-.stat-v.gold{color:var(--gold)}
-.stat-ch{font-size:11px;color:var(--g6);margin-top:4px}
-
-/* TEE SHEET */
-.tee-list{display:flex;flex-direction:column;gap:8px}
-.tee-row{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;transition:background .3s}
-.tee-row.booking-flash{background:rgba(82,183,136,.1);border-color:var(--g6)}
-.t-time{font-size:14px;font-weight:700;width:74px;flex-shrink:0}
-.t-badge{font-size:10px;border-radius:4px;padding:2px 7px;font-weight:600;letter-spacing:.4px;white-space:nowrap}
-.t-badge.std{background:rgba(82,183,136,.12);color:var(--g4)}
-.t-badge.twi{background:rgba(240,192,64,.14);color:var(--gold)}
-.t-bar{flex:1;background:var(--s3);border-radius:4px;height:6px;overflow:hidden}
-.t-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--g7),var(--g6));transition:width .7s ease}
-.t-fill.full{background:#ef4444}
-.t-spots{font-size:12px;color:var(--mt);width:64px;text-align:right;flex-shrink:0}
-.t-spots.full{color:#f87171}
-.t-price{font-size:12px;font-weight:600;color:var(--g4);width:36px;text-align:right;flex-shrink:0}
-
-/* BOOKINGS */
-.book-list{display:flex;flex-direction:column;gap:8px}
-.book-empty{color:var(--mt);font-size:13px;padding:6px 0}
-.book-item{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:14px;animation:pop .3s ease}
-.book-item.new{border-color:var(--g6);background:rgba(82,183,136,.06)}
-.bav{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--g8),var(--g7));display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0}
-.bi{flex:1}
-.bn{font-size:14px;font-weight:600}
-.bd2{font-size:11px;color:var(--mt);margin-top:2px}
-.bc{font-size:11px;font-family:monospace;background:var(--s3);border-radius:5px;padding:3px 8px;color:var(--g4);flex-shrink:0}
-
-/* CONDITIONS */
-.cond-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.cond{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:14px 16px}
-.cond-ico{font-size:22px;margin-bottom:6px}
-.cond-l{font-size:11px;color:var(--mt);margin-bottom:2px}
-.cond-v{font-size:14px;font-weight:600}
-
-/* VALUE PROP BANNER */
-.value-banner{background:linear-gradient(135deg,rgba(64,145,108,.15),rgba(82,183,136,.08));border:1px solid rgba(82,183,136,.25);border-radius:var(--r);padding:18px 20px}
-.vb-title{font-size:14px;font-weight:700;margin-bottom:10px;color:var(--g4)}
-.vb-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-.vb-item{text-align:center}
-.vb-num{font-size:22px;font-weight:800;color:var(--gold)}
-.vb-desc{font-size:11px;color:var(--mt);margin-top:2px;line-height:1.4}
-
-/* ANIMATIONS */
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-@keyframes ring{0%{box-shadow:0 0 0 0 rgba(82,183,136,.55)}70%{box-shadow:0 0 0 22px rgba(82,183,136,0)}100%{box-shadow:0 0 0 0 rgba(82,183,136,0)}}
-@keyframes td{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-7px)}}
-@keyframes pop{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.loading-text{color:var(--muted);font-size:0.88rem;display:flex;align-items:center;gap:0.5rem}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">
-    <div class="logo-icon">⛳</div>
-    <div>
-      golf.ai
-      <div class="logo-tag">Phone Admin — Interactive Demo</div>
-    </div>
+<!-- API KEY MODAL -->
+<div class="modal-overlay show" id="apiModal">
+  <div class="modal">
+    <h2>🏌️ <span>Golf Course AI Studio</span></h2>
+    <p>Enter your Anthropic API key to generate real AI personas powered by Claude. Or skip to see a live demo with pre-generated content.</p>
+    <input type="password" id="apiKeyInput" placeholder="sk-ant-..." />
+    <button class="modal-btn" onclick="saveKey()">Start Building with Claude</button>
+    <button class="modal-skip" onclick="skipToDemo()">Skip — Show Demo Mode</button>
+    <p class="key-hint">Key stays in your browser only. Get one at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></p>
   </div>
-  <div style="display:flex;align-items:center;gap:14px">
-    <div class="header-pill"><div class="dot"></div>AI Receptionist Live</div>
-    <div class="powered">Powered by Claude AI</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">⛳ Golf<span>AI</span> Studio</div>
+  <div style="display:flex;align-items:center;gap:0.8rem">
+    <span class="api-status demo" id="apiStatusBadge">● Demo Mode</span>
+    <span class="nav-badge">Powered by Claude</span>
   </div>
-</header>
+</nav>
 
-<main>
-
-  <!-- PHONE PANEL -->
-  <div class="phone" style="position:relative">
-
-    <!-- RINGING OVERLAY -->
-    <div class="ring-overlay" id="ringOverlay">
-      <div class="ring-circle">📞</div>
-      <div class="ring-num" id="ringNum"></div>
-      <div class="ring-sub">Incoming call…</div>
-      <div class="ring-btns">
-        <button class="ans" onclick="answer()">✓ Answer</button>
-        <button class="dec" onclick="decline()">✗ Decline</button>
-      </div>
-    </div>
-
-    <div class="phone-top">
-      <div class="sec-label">Call Simulator</div>
-
-      <!-- SCENARIO PICKER -->
-      <div class="scenario-card" id="scenarioPicker">
-        <div class="pick-label">Choose a scenario to demo ↓</div>
-        <div class="scenarios">
-          <div class="sc active" onclick="pick(0,this)">
-            <em>📅 Booking</em>
-            Book a tee time this Saturday for 4 players
-          </div>
-          <div class="sc" onclick="pick(1,this)">
-            <em>💰 Pricing</em>
-            Green fees, twilight rates & memberships
-          </div>
-          <div class="sc" onclick="pick(2,this)">
-            <em>⛳ Conditions</em>
-            Course conditions & weather check
-          </div>
-          <div class="sc" onclick="pick(3,this)">
-            <em>🏢 Corporate</em>
-            Group outing for 16 — what's available?
-          </div>
-        </div>
-        <button class="play-btn" id="playBtn" onclick="startRing()">
-          📞 Simulate Incoming Call
-        </button>
-      </div>
-
-      <!-- ACTIVE CALL HEADER -->
-      <div class="call-header" id="callHeader">
-        <div>
-          <div class="call-num" id="callNum"></div>
-          <div class="call-timer" id="callTimer">00:00</div>
-        </div>
-        <button class="end-btn" onclick="endCall()">⊘ End Call</button>
-      </div>
-    </div>
-
-    <!-- TRANSCRIPT -->
-    <div class="transcript" id="transcript">
-      <div class="empty-state">
-        <div style="font-size:36px">📞</div>
-        <div>Select a scenario and simulate a call</div>
-      </div>
-    </div>
-
-    <!-- RESET -->
-    <div class="reset-wrap" id="resetWrap" style="display:none">
-      <button class="reset-btn" onclick="resetDemo()">↩ Try Another Scenario</button>
-    </div>
+<!-- HERO -->
+<div class="hero">
+  <h1>Build Your Golf Course's <span>AI Receptionist</span><br>in 60 Seconds</h1>
+  <p>Fill in your course details, and Claude generates a complete AI phone persona — with FAQs, booking scripts, upsell lines, and a live chat you can test right now.</p>
+  <div class="hero-steps">
+    <div class="step"><span class="step-num">1</span> Enter course details</div>
+    <div class="step"><span class="step-num">2</span> Claude generates AI profile</div>
+    <div class="step"><span class="step-num">3</span> Test your AI receptionist live</div>
   </div>
+</div>
 
-  <!-- DASHBOARD -->
-  <div class="dash">
+<!-- MAIN -->
+<div class="main">
 
-    <!-- VALUE PROP -->
-    <div class="value-banner">
-      <div class="vb-title">⚡ What Golf.ai Phone Admin Delivers</div>
-      <div class="vb-grid">
-        <div class="vb-item">
-          <div class="vb-num">24/7</div>
-          <div class="vb-desc">Always-on AI handles calls even when the pro shop is closed</div>
-        </div>
-        <div class="vb-item">
-          <div class="vb-num">90%</div>
-          <div class="vb-desc">Of routine calls handled without human staff involvement</div>
-        </div>
-        <div class="vb-item">
-          <div class="vb-num">$0</div>
-          <div class="vb-desc">Missed revenue — every call answered, every booking captured</div>
-        </div>
+  <!-- LEFT: FORM -->
+  <div class="form-panel">
+
+    <div class="form-section">
+      <div class="section-title">📍 Course Identity</div>
+      <div class="form-group"><label>Course Name</label><input id="f_name" placeholder="Pebble Ridge Golf &amp; Country Club" /></div>
+      <div class="form-group"><label>Location</label><input id="f_location" placeholder="Scottsdale, AZ" /></div>
+      <div class="form-group"><label>Phone Number</label><input id="f_phone" placeholder="(480) 555-0192" /></div>
+      <div class="form-group"><label>Course Type &amp; Par</label><input id="f_type" placeholder="18-hole championship, Par 72, Slope 137" /></div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title">💰 Pricing</div>
+      <div class="row2">
+        <div class="form-group"><label>Weekday</label><input id="f_weekday" placeholder="$95/person" /></div>
+        <div class="form-group"><label>Weekend</label><input id="f_weekend" placeholder="$135/person" /></div>
       </div>
-    </div>
-
-    <!-- STATS -->
-    <div>
-      <div class="sec-label">Today's Performance — Pebble Ridge GCC</div>
-      <div class="stats">
-        <div class="stat">
-          <div class="stat-l">Calls Handled</div>
-          <div class="stat-v" id="sv-calls">47</div>
-          <div class="stat-ch">↑ 100% AI handled</div>
-        </div>
-        <div class="stat">
-          <div class="stat-l">Bookings Captured</div>
-          <div class="stat-v" id="sv-book">12</div>
-          <div class="stat-ch">+3 vs yesterday</div>
-        </div>
-        <div class="stat">
-          <div class="stat-l">Avg Handle Time</div>
-          <div class="stat-v" id="sv-time">1m 42s</div>
-          <div class="stat-ch">vs 4m+ human avg</div>
-        </div>
-        <div class="stat">
-          <div class="stat-l">Staff Hours Freed</div>
-          <div class="stat-v gold" id="sv-hrs">3.1h</div>
-          <div class="stat-ch">today alone</div>
-        </div>
+      <div class="row2">
+        <div class="form-group"><label>Twilight</label><input id="f_twilight" placeholder="$65 after 2pm" /></div>
+        <div class="form-group"><label>Junior/Other</label><input id="f_junior" placeholder="$45 under 18" /></div>
       </div>
+      <div class="form-group"><label>Membership (optional)</label><input id="f_membership" placeholder="$3,200/year unlimited" /></div>
     </div>
 
-    <!-- TEE SHEET -->
-    <div>
-      <div class="sec-label">Live Tee Sheet</div>
-      <div class="tee-list" id="teeList"></div>
+    <div class="form-section">
+      <div class="section-title">🏌️ Course & Amenities</div>
+      <div class="form-group"><label>Operating Hours</label><input id="f_hours" placeholder="Open 6:00 AM – 8:00 PM daily" /></div>
+      <div class="form-group"><label>Amenities</label><textarea id="f_amenities" placeholder="Pro Shop, Driving Range, Restaurant, Club Rentals ($55)..."></textarea></div>
+      <div class="form-group"><label>Today's Conditions (optional)</label><textarea id="f_conditions" placeholder="82°F sunny, greens fast (stimp 11.2), fairways excellent..."></textarea></div>
     </div>
 
-    <!-- BOOKINGS -->
-    <div>
-      <div class="sec-label">Session Bookings</div>
-      <div class="book-list" id="bookList">
-        <div class="book-empty" id="bookEmpty">Bookings appear here as the AI confirms them during calls.</div>
+    <div class="form-section">
+      <div class="section-title">📅 Tee Time & Booking Rules</div>
+      <div class="form-group"><label>Available Tee Times Today</label><textarea id="f_teetimes" placeholder="7:00 AM (2 spots), 10:00 AM (4 spots), 1:00 PM (4 spots), 4:00 PM twilight..."></textarea></div>
+      <div class="form-group"><label>Booking Policies</label><textarea id="f_policies" placeholder="14 days advance, 24hr cancellation, groups 8+ get 10% off..."></textarea></div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title">🎯 AI Persona Style</div>
+      <div class="form-group">
+        <label>Receptionist Tone</label>
+        <select id="f_tone">
+          <option value="warm and enthusiastic">Warm &amp; Enthusiastic</option>
+          <option value="professional and polished">Professional &amp; Polished</option>
+          <option value="friendly and casual">Friendly &amp; Casual</option>
+          <option value="upscale and refined">Upscale &amp; Refined</option>
+        </select>
       </div>
+      <div class="form-group"><label>Any Special Notes (events, promotions, etc.)</label><textarea id="f_notes" placeholder="Corporate tournament this Saturday, junior camp next week..."></textarea></div>
     </div>
 
-    <!-- CONDITIONS -->
-    <div>
-      <div class="sec-label">Course Conditions</div>
-      <div class="cond-grid">
-        <div class="cond"><div class="cond-ico">🌤</div><div class="cond-l">Weather</div><div class="cond-v">82°F · Sunny</div></div>
-        <div class="cond"><div class="cond-ico">💨</div><div class="cond-l">Wind</div><div class="cond-v">8 mph NW</div></div>
-        <div class="cond"><div class="cond-ico">⛳</div><div class="cond-l">Greens Speed</div><div class="cond-v">11.2 stimp · Fast</div></div>
-        <div class="cond"><div class="cond-ico">🌿</div><div class="cond-l">Fairways</div><div class="cond-v">Excellent</div></div>
-        <div class="cond"><div class="cond-ico">🟢</div><div class="cond-l">Status</div><div class="cond-v" style="color:var(--g4)">OPEN</div></div>
-        <div class="cond"><div class="cond-ico">📍</div><div class="cond-l">Notes</div><div class="cond-v" style="font-size:12px">#7 temp green</div></div>
-      </div>
+    <div class="streaming-bar" id="streamingBar">
+      <div class="pulse"></div>
+      <span id="streamingText">Claude is generating your AI profile...</span>
     </div>
+
+    <button class="gen-btn" id="genBtn" onclick="generate()">
+      ⚡ Generate AI Receptionist
+    </button>
+    <button class="demo-btn" onclick="loadDemo()">Or load demo — Pebble Ridge G&CC</button>
 
   </div>
-</main>
+
+  <!-- RIGHT: OUTPUT TABS -->
+  <div class="output-panel">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('persona')">🎭 Persona</div>
+      <div class="tab" onclick="switchTab('faq')">❓ FAQs</div>
+      <div class="tab" onclick="switchTab('scripts')">📜 Scripts</div>
+      <div class="tab" onclick="switchTab('chat')">💬 Live Test</div>
+    </div>
+
+    <!-- PERSONA TAB -->
+    <div class="tab-content active" id="tab-persona">
+      <div class="empty-state" id="persona-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        <h3>Your AI Receptionist Profile</h3>
+        <p>Fill in course details and click Generate to create a custom AI persona</p>
+      </div>
+      <div id="persona-output" style="display:none"></div>
+    </div>
+
+    <!-- FAQ TAB -->
+    <div class="tab-content" id="tab-faq">
+      <div class="empty-state" id="faq-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <h3>Auto-Generated FAQs</h3>
+        <p>Claude will create smart Q&amp;A pairs your AI receptionist handles automatically</p>
+      </div>
+      <div id="faq-output" style="display:none"></div>
+    </div>
+
+    <!-- SCRIPTS TAB -->
+    <div class="tab-content" id="tab-scripts">
+      <div class="empty-state" id="scripts-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <h3>Booking &amp; Upsell Scripts</h3>
+        <p>Ready-to-use phone scripts your AI will follow to convert callers into bookings</p>
+      </div>
+      <div id="scripts-output" style="display:none"></div>
+    </div>
+
+    <!-- LIVE CHAT TAB -->
+    <div class="tab-content" id="tab-chat">
+      <div class="no-persona-msg" id="chat-locked">
+        <p>⬅️ Generate your AI profile first, then come back here to test it live</p>
+      </div>
+      <div class="chat-wrapper" id="chat-active" style="display:none">
+        <div class="chat-persona-bar">
+          <div class="persona-avatar" id="chat-avatar">?</div>
+          <div class="persona-info">
+            <strong id="chat-persona-name">AI Receptionist</strong>
+            <span><span class="online-dot"></span>Live — Powered by Claude</span>
+          </div>
+        </div>
+        <p style="font-size:0.78rem;color:var(--muted);margin-bottom:0.6rem">Try asking about pricing, tee times, or booking:</p>
+        <div class="quick-qs" id="quickQs">
+          <button class="quick-q" onclick="sendQuick(this)">What are your weekend rates?</button>
+          <button class="quick-q" onclick="sendQuick(this)">Do you have tee times today?</button>
+          <button class="quick-q" onclick="sendQuick(this)">Can I rent clubs?</button>
+          <button class="quick-q" onclick="sendQuick(this)">Group discount?</button>
+        </div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-row">
+          <input type="text" id="chatInput" placeholder="Ask your AI receptionist anything..." onkeypress="if(event.key==='Enter')sendChat()" />
+          <button class="send-btn" id="sendBtn" onclick="sendChat()">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
-// ── SCENARIOS ────────────────────────────────────────────────────────────────
-// Each scenario is a pre-scripted conversation that streams realistically
-const SCENARIOS = [
-  {
-    num: "(480) 555-8721",
-    name: "Alex R.",
-    teeTime: "10:00 AM",
-    players: "4",
-    conf: "PR-260320-4471",
-    chat: [
-      { r:"caller", t:"Hi, I'd like to book a tee time for this Saturday for 4 players please." },
-      { r:"ai", t:"Good morning! Thanks for calling Pebble Ridge Golf & Country Club. I'd love to get you set up for Saturday!\n\nFor 4 players this Saturday, our weekend rate is $135 per person, cart included. We have two openings left this Saturday — 10:00 AM and 2:30 PM (twilight at $65 each). Which works better for your group?" },
-      { r:"caller", t:"The 10 AM works great. How do we pay?" },
-      { r:"ai", t:"Perfect choice — 10:00 AM is a great time, the course is usually in beautiful shape by then.\n\nYou can pay when you arrive at the pro shop (we take all major cards and Apple Pay), or I can take a card over the phone right now to secure the tee time. Which do you prefer?" },
-      { r:"caller", t:"We'll pay when we get there. Can you book it?" },
-      { r:"ai", t:"Absolutely! You're all set.\n\n📅 Confirmation: PR-260320-4471\n👥 4 players · Saturday · 10:00 AM\n💵 $135/person — pay on arrival\n\nPlease arrive 20 minutes early to check in at the pro shop. Is there anything else I can help you with — club rentals, restaurant reservations, or anything about the course?" },
-      { r:"caller", t:"No that's everything, thanks!" },
-      { r:"ai", t:"Wonderful! We'll see your group Saturday morning — hope you all have a fantastic round. Have a great day! 🏌️" },
-    ]
-  },
-  {
-    num: "(602) 555-3344",
-    name: "Morgan S.",
-    chat: [
-      { r:"caller", t:"What are your green fees? And do you have twilight rates?" },
-      { r:"ai", t:"Hi there! Happy to break down our pricing:\n\n☀️ Weekday (Mon–Fri): $95/person\n🏖 Weekend (Sat–Sun): $135/person\n🌅 Twilight after 2 PM: $65/person\n🌙 Super Twilight after 4 PM: $45/person\n\nAll rates include a shared cart. Junior golfers under 18 play for $45 any day.\n\nWe also have an annual membership at $3,200/year — unlimited golf plus 20% off the pro shop. Would you like to hear more about that?" },
-      { r:"caller", t:"The twilight rate sounds good. Do you have availability this week?" },
-      { r:"ai", t:"Great choice — twilight rounds are fantastic this time of year, especially with our current 82°F weather and the greens running at 11.2 on the stimpmeter.\n\nThis week we have twilight spots (after 2 PM) available Tuesday through Friday, and also Sunday. The course is in excellent shape right now.\n\nWould you like me to lock in a specific day and time? I can have you confirmed in about 60 seconds." },
-      { r:"caller", t:"Thursday works, what times do you have?" },
-      { r:"ai", t:"On Thursday we have 2:30 PM, 3:00 PM, and 4:00 PM available for twilight.\n\nThe 2:30 PM gives you the most daylight — easily 16–18 holes. The 4:00 PM is our Super Twilight rate at $45, great if you just want a quick 9.\n\nHow many players, and which slot looks good?" },
-    ]
-  },
-  {
-    num: "(480) 555-0912",
-    name: "Jamie L.",
-    chat: [
-      { r:"caller", t:"Hi, what are the course conditions like today? Is it open?" },
-      { r:"ai", t:"Hi! Great news — Pebble Ridge is open and in outstanding condition today!\n\n🌤 82°F and sunny, light 8 mph breeze from the northwest\n⛳ Greens are running fast — 11.2 on the stimpmeter, very true\n🌿 Fairways freshly mowed, firm and fast\n📍 One small note: hole #7 has a temporary green in use while we do some cart path work — everything else is full play\n\nHonestly one of the better days we've had this month. Thinking of coming out today?" },
-      { r:"caller", t:"Yeah we're thinking about it. Do you have any open tee times this afternoon?" },
-      { r:"ai", t:"You're in luck! This afternoon we still have:\n\n⏰ 1:00 PM — $95/person (4 spots open)\n🌅 2:30 PM — $65/person twilight (4 spots)\n🌙 4:00 PM — $45/person super twilight\n\nThe 1:00 PM gives you a full 18 in great afternoon light. How many players are you bringing?" },
-      { r:"caller", t:"Just two of us." },
-      { r:"ai", t:"Perfect — two players is easy to fit. The 1:00 PM puts you on the first tee in about an hour, plenty of time for a full round before sunset.\n\nWant me to lock that in for you? I just need a name and I'll have your confirmation ready in seconds." },
-    ]
-  },
-  {
-    num: "(623) 555-7755",
-    name: "Chris O.",
-    conf: "PR-260320-8819",
-    teeTime: "8:00 AM",
-    players: "16",
-    chat: [
-      { r:"caller", t:"Hi, we have a group of 16 for a corporate outing next month. What options do you have?" },
-      { r:"ai", t:"Wonderful — a corporate outing for 16 is right in our wheelhouse! Pebble Ridge hosts several of these each month.\n\nHere's what a typical corporate package looks like:\n\n🏌️ Full 18-hole round with carts for all players\n💼 Groups of 8+ receive 10% off our standard rate\n🍽 Private room at The Clubhouse Grille for lunch or dinner (custom menus available)\n🏆 Scoring, prizes, and a closest-to-the-pin contest on #5 if you want some fun competition\n📦 Branded merchandise from our pro shop at wholesale pricing\n\nWith 16 players on a weekday, you're looking at roughly $95 × 16 = $1,520 for golf, minus the 10% group discount. What date range were you considering?" },
-      { r:"caller", t:"We're thinking a weekday in the second or third week of April. Mornings preferred." },
-      { r:"ai", t:"That works beautifully — April mornings here are about as good as golf gets. I'm showing solid availability in that window, particularly April 15th and 22nd in the 8:00–9:30 AM range.\n\nFor 16 players I'd recommend taking two tee times back to back — say 8:00 AM and 8:10 AM — so your whole group plays together in one wave.\n\nI can provisionally hold one of those dates right now while you confirm with your team. There's no commitment until you're ready. Would April 15th or 22nd work better?" },
-      { r:"caller", t:"Let's pencil in April 15th at 8 AM. Who should we coordinate with for the full package?" },
-      { r:"ai", t:"Excellent! I've penciled in April 15th at 8:00 AM for 16 players.\n\n📋 Provisional Hold: PR-260320-8819\n👥 16 players · April 15 · 8:00 AM (two tee times)\n📞 Our events coordinator Sarah Chen will reach out within 24 hours to walk you through the full package, menus, and any custom requests.\n\nYou can also reach Sarah directly at events@pebbleridgegcc.com. Is there a best contact number or email I can pass along to her?" },
-    ]
-  }
-];
+let apiKey = '';
+let isDemo = false;
+let generatedData = null;
+let chatHistory = [];
+let systemPrompt = '';
 
-// ── TEE DATA ──────────────────────────────────────────────────────────────────
-const tees = [
-  {time:"7:00 AM", type:"std", spots:2, total:4, price:95},
-  {time:"8:30 AM", type:"std", spots:0, total:4, price:95},
-  {time:"10:00 AM",type:"std", spots:4, total:4, price:95},
-  {time:"11:30 AM",type:"std", spots:3, total:4, price:95},
-  {time:"1:00 PM", type:"std", spots:4, total:4, price:95},
-  {time:"2:30 PM", type:"twi", spots:4, total:4, price:65},
-  {time:"4:00 PM", type:"twi", spots:4, total:4, price:45},
-];
-
-// ── STATE ─────────────────────────────────────────────────────────────────────
-let currentScenario = 0;
-let timerInt = null;
-let callStart = null;
-let callActive = false;
-let msgIndex = 0;
-let streaming = false;
-let sessionBookings = 0;
-let sessionCalls = 0;
-
-// ── INIT ──────────────────────────────────────────────────────────────────────
-renderTees();
-
-function renderTees() {
-  document.getElementById('teeList').innerHTML = tees.map(t => {
-    const pct = ((t.total - t.spots) / t.total) * 100;
-    const full = t.spots === 0;
-    return `<div class="tee-row" id="tee-${t.time.replace(/[\s:]/g,'_')}">
-      <div class="t-time">${t.time}</div>
-      <div class="t-badge ${t.type==='twi'?'twi':'std'}">${t.type==='twi'?'Twilight':'Standard'}</div>
-      <div class="t-bar"><div class="t-fill ${full?'full':''}" style="width:${pct}%"></div></div>
-      <div class="t-spots ${full?'full':''}">${full?'FULL':t.spots+' open'}</div>
-      <div class="t-price">$${t.price}</div>
-    </div>`;
-  }).join('');
-}
-
-// ── SCENARIO PICK ─────────────────────────────────────────────────────────────
-function pick(idx, el) {
-  currentScenario = idx;
-  document.querySelectorAll('.sc').forEach(e => e.classList.remove('active'));
-  el.classList.add('active');
-}
-
-// ── CALL FLOW ─────────────────────────────────────────────────────────────────
-function startRing() {
-  const s = SCENARIOS[currentScenario];
-  document.getElementById('ringNum').textContent = s.num;
-  document.getElementById('ringOverlay').classList.add('show');
-  document.getElementById('playBtn').disabled = true;
-}
-
-function decline() {
-  document.getElementById('ringOverlay').classList.remove('show');
-  document.getElementById('playBtn').disabled = false;
-}
-
-function answer() {
-  const s = SCENARIOS[currentScenario];
-  document.getElementById('ringOverlay').classList.remove('show');
-
-  // Switch UI
-  document.getElementById('scenarioPicker').style.display = 'none';
-  document.getElementById('callHeader').classList.add('show');
-  document.getElementById('callHeader').style.display = 'flex';
-  document.getElementById('resetWrap').style.display = 'block';
-  document.getElementById('callNum').textContent = s.num;
-
-  // Timer
-  callStart = Date.now();
-  timerInt = setInterval(() => {
-    const sec = Math.floor((Date.now() - callStart) / 1000);
-    const m = Math.floor(sec/60).toString().padStart(2,'0');
-    const sc = (sec%60).toString().padStart(2,'0');
-    document.getElementById('callTimer').textContent = `${m}:${sc}`;
-  }, 1000);
-
-  callActive = true;
-  msgIndex = 0;
-
-  // Clear transcript
-  const t = document.getElementById('transcript');
-  t.innerHTML = '';
-  addSysLine('📞 Call connected · Pebble Ridge Golf & Country Club');
-
-  // Start playing messages
-  playNextMsg();
-}
-
-function endCall() {
-  clearInterval(timerInt);
-  callActive = false;
-  sessionCalls++;
-  const sec = Math.floor((Date.now() - callStart) / 1000);
-  const hrs = (sessionCalls * sec / 3600).toFixed(1);
-  document.getElementById('sv-calls').textContent = 47 + sessionCalls;
-  document.getElementById('sv-hrs').textContent = (3.1 + parseFloat(hrs)).toFixed(1) + 'h';
-}
-
-function resetDemo() {
-  clearInterval(timerInt);
-  callActive = false;
-  streaming = false;
-
-  document.getElementById('scenarioPicker').style.display = 'block';
-  document.getElementById('callHeader').classList.remove('show');
-  document.getElementById('callHeader').style.display = 'none';
-  document.getElementById('resetWrap').style.display = 'none';
-  document.getElementById('playBtn').disabled = false;
-
-  document.getElementById('transcript').innerHTML = `<div class="empty-state"><div style="font-size:36px">📞</div><div>Select a scenario and simulate a call</div></div>`;
-}
-
-// ── MESSAGE PLAYBACK ──────────────────────────────────────────────────────────
-function playNextMsg() {
-  const s = SCENARIOS[currentScenario];
-  if (msgIndex >= s.chat.length) {
-    // Done
-    endCall();
-    addSysLine('📵 Call ended');
-    checkBooking(s);
+// ─── MODAL ───────────────────────────────────────────
+function saveKey() {
+  const val = document.getElementById('apiKeyInput').value.trim();
+  if (!val.startsWith('sk-ant-') && !val.startsWith('sk-')) {
+    showToast('❌ Invalid API key format');
     return;
   }
-  const msg = s.chat[msgIndex];
-  msgIndex++;
-
-  if (msg.r === 'caller') {
-    // Caller messages appear instantly after a short pause
-    setTimeout(() => {
-      appendMsg('caller', msg.t);
-      setTimeout(() => playNextMsg(), 900);
-    }, msgIndex === 1 ? 600 : 500);
-  } else {
-    // AI messages: show typing, then stream text
-    setTimeout(() => {
-      showTypingBubble();
-      const thinkTime = 1200 + Math.random() * 600;
-      setTimeout(() => {
-        removeTyping();
-        streamText(msg.t, () => {
-          setTimeout(() => playNextMsg(), 1100);
-        });
-      }, thinkTime);
-    }, 400);
-  }
+  apiKey = val;
+  isDemo = false;
+  document.getElementById('apiModal').classList.remove('show');
+  document.getElementById('apiStatusBadge').textContent = '● Live Mode';
+  document.getElementById('apiStatusBadge').className = 'api-status live';
+  showToast('✅ API key saved — ready to generate!');
 }
 
-function streamText(text, cb) {
-  const t = document.getElementById('transcript');
-  const el = document.createElement('div');
-  el.className = 'msg ai';
-  el.innerHTML = '<div class="msg-who">🤖 Golf.ai AI</div><div class="bubble" id="stream-bubble"></div>';
-  t.appendChild(el);
-  const bubble = document.getElementById('stream-bubble');
+function skipToDemo() {
+  isDemo = true;
+  apiKey = '';
+  document.getElementById('apiModal').classList.remove('show');
+  showToast('🎭 Demo mode — showing pre-generated example');
+  loadDemo();
+}
 
-  // Split into small chunks to simulate streaming
-  const words = text.split('');
-  let i = 0;
-  const speed = 18; // ms per char
+// ─── TABS ─────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t,i)=>{
+    t.classList.toggle('active', ['persona','faq','scripts','chat'][i]===name);
+  });
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+}
 
-  function next() {
-    if (i >= words.length) {
-      bubble.id = '';
-      if (cb) cb();
-      return;
+// ─── TOAST ───────────────────────────────────────────
+function showToast(msg, dur=3000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), dur);
+}
+
+// ─── COPY ────────────────────────────────────────────
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent = 'Copied!';
+    setTimeout(()=>btn.textContent='Copy',2000);
+  });
+}
+
+// ─── DEMO DATA ───────────────────────────────────────
+const DEMO_DATA = {
+  persona: {
+    name: "Alex",
+    fullTitle: "Alex — AI Receptionist, Pebble Ridge G&CC",
+    tagline: "Your friendly guide to the perfect round",
+    description: "Alex is Pebble Ridge's warm, knowledgeable AI phone receptionist. Trained on every detail of the course — pricing, availability, conditions, and pro shop specials — Alex handles calls with genuine enthusiasm for golf and a laser focus on booking callers in.",
+    traits: ["Warm & Conversational", "Booking-Focused", "Course Expert", "Upsell-Savvy", "Always Available 24/7"]
+  },
+  faqs: [
+    {q:"What are your green fees?", a:"Weekdays are $95/person with cart included — a great deal for our championship course. Weekends are $135, and if you can play after 2 PM we have twilight rates starting at just $65. Super twilight after 4 PM is only $45!"},
+    {q:"Do you have availability today?", a:"Absolutely! Right now we have openings at 10:00 AM (4 spots), 1:00 PM (4 spots), 2:30 PM twilight, and 4:00 PM super twilight. What time works best for your group?"},
+    {q:"Can I rent clubs?", a:"Yes! We have premium Titleist club rentals for $55/set — they're excellent clubs. Swing by the pro shop when you arrive and we'll get you set up. The pro shop opens at 6:00 AM."},
+    {q:"What are today's course conditions?", a:"Conditions are beautiful today — 82 degrees, sunny, and 8 mph winds. The greens are fast and true running at stimpmeter 11.2, and the fairways were freshly mowed this morning. One note: hole #7 has a temporary green due to cart path work, but it's still playing great."},
+    {q:"Do you offer group discounts?", a:"For groups of 8 or more, yes — you qualify for our 10% corporate discount. We also have private event spaces if you're looking to host a tournament or corporate outing. Want me to connect you with our events coordinator?"},
+    {q:"What's your cancellation policy?", a:"We have a 24-hour cancellation policy for a full refund. As long as you call or cancel online at least 24 hours before your tee time, you'll receive a complete refund, no questions asked."}
+  ],
+  bookingScript: `BOOKING SCRIPT — Tee Time Reservation
+
+OPENING:
+"Thank you for calling Pebble Ridge Golf & Country Club, this is Alex! Are you looking to book a tee time today?"
+
+GATHER INFO:
+- "How many players in your group?"
+- "Did you have a specific date in mind, or are you flexible?"
+- "Any preference on morning, midday, or afternoon?"
+
+PRESENT OPTIONS (based on their answers):
+"Great! For [X players] on [day], I have [TIME] available — that's our [rate] rate with carts included. I also have [TIME] if you'd like more flexibility."
+
+CLOSE:
+"Fantastic! I just need your name and a phone number to hold that tee time. We'll send a confirmation to your email if you have one handy."
+
+CONFIRMATION:
+"You're all set! Tee time confirmed for [DATE] at [TIME] for [X players]. Your confirmation number is [PR-XXXXXX]. Pro shop opens at 6 AM if you want to warm up on the range first — large bucket is $18. See you then!"`,
+
+  upsellScript: `UPSELL SCRIPT — Pro Shop & Dining Add-ons
+
+CLUB RENTALS (if they haven't mentioned clubs):
+"Will everyone be bringing their own clubs, or would anyone need a set? We have premium Titleist rentals for just $55 — they're the same clubs our members play with."
+
+DRIVING RANGE:
+"If you want to warm up before your round, the driving range opens at 5:30 AM. Large bucket is $18, small is $10 — it's a great way to get your swing dialed in."
+
+RESTAURANT:
+"One more thing — our Clubhouse Grille is fantastic for lunch after your round. Kitchen is open 11 AM to 4 PM and the food is exceptional. A lot of groups make a full day of it."
+
+MEMBERSHIP (for repeat visitors):
+"Since you're enjoying the course — have you heard about our annual membership? $3,200 covers unlimited golf all year plus 20% off everything in the pro shop. Pays for itself quickly if you play more than a few times a month."`,
+
+  systemPrompt: `You are Alex, the AI phone receptionist for Pebble Ridge Golf & Country Club. You're warm, enthusiastic about golf, and always focused on booking callers in.
+
+COURSE: Pebble Ridge Golf & Country Club — 4800 Fairway Drive, Scottsdale AZ 85251 — (480) 555-0192
+COURSE: 18-hole championship, Par 72, Rating 73.4, Slope 137
+
+PRICING:
+- Weekday: $95/person (cart included)
+- Weekend: $135/person (cart included)
+- Twilight after 2 PM: $65 | Super Twilight after 4 PM: $45
+- Junior under 18: $45 | Membership: $3,200/year
+
+TODAY: 82°F sunny, greens stimp 11.2, fairways excellent. #7 temp green in use.
+AVAILABLE: 10:00 AM (4 spots), 1:00 PM (4 spots), 2:30 PM twilight, 4:00 PM super twilight
+
+RULES: Keep responses short and conversational. Always try to close a booking. Mention restaurant or pro shop when relevant.`
+};
+
+// ─── LOAD DEMO ────────────────────────────────────────
+function loadDemo() {
+  fillDemoForm();
+  renderOutput(DEMO_DATA);
+  showToast('🎯 Demo loaded — explore the tabs to see what Claude generates');
+}
+
+function fillDemoForm() {
+  document.getElementById('f_name').value = 'Pebble Ridge Golf & Country Club';
+  document.getElementById('f_location').value = 'Scottsdale, AZ';
+  document.getElementById('f_phone').value = '(480) 555-0192';
+  document.getElementById('f_type').value = '18-hole championship, Par 72, Slope 137';
+  document.getElementById('f_weekday').value = '$95/person (cart included)';
+  document.getElementById('f_weekend').value = '$135/person (cart included)';
+  document.getElementById('f_twilight').value = '$65 after 2pm / $45 after 4pm';
+  document.getElementById('f_junior').value = '$45 under 18';
+  document.getElementById('f_membership').value = '$3,200/year unlimited';
+  document.getElementById('f_hours').value = 'Pro Shop 6 AM–7 PM, Range 5:30 AM–7:30 PM';
+  document.getElementById('f_amenities').value = 'Pro Shop (full equipment), Club Rental $55/set Titleist, Driving Range, Clubhouse Grille restaurant, Private event spaces';
+  document.getElementById('f_conditions').value = '82°F sunny, 8 mph NW breeze, greens stimp 11.2, fairways freshly mowed. #7 temp green in use.';
+  document.getElementById('f_teetimes').value = '7:00 AM (2 spots), 10:00 AM (4 spots), 1:00 PM (4 spots), 2:30 PM twilight ($65), 4:00 PM super twilight ($45)';
+  document.getElementById('f_policies').value = '14 days advance booking, 24hr cancellation full refund, groups 8+ get 10% corporate discount';
+}
+
+// ─── GENERATE (LIVE) ──────────────────────────────────
+async function generate() {
+  const name = document.getElementById('f_name').value.trim();
+  if (!name) { showToast('⚠️ Enter your course name first'); return; }
+
+  if (isDemo || !apiKey) {
+    loadDemo();
+    return;
+  }
+
+  const btn = document.getElementById('genBtn');
+  const bar = document.getElementById('streamingBar');
+  const streamText = document.getElementById('streamingText');
+  btn.disabled = true;
+  btn.innerHTML = '⏳ Generating...';
+  bar.classList.add('show');
+
+  const courseInfo = `
+Course Name: ${document.getElementById('f_name').value}
+Location: ${document.getElementById('f_location').value}
+Phone: ${document.getElementById('f_phone').value}
+Course Type: ${document.getElementById('f_type').value}
+Weekday Rate: ${document.getElementById('f_weekday').value}
+Weekend Rate: ${document.getElementById('f_weekend').value}
+Twilight Rate: ${document.getElementById('f_twilight').value}
+Junior/Other: ${document.getElementById('f_junior').value}
+Membership: ${document.getElementById('f_membership').value}
+Hours: ${document.getElementById('f_hours').value}
+Amenities: ${document.getElementById('f_amenities').value}
+Today's Conditions: ${document.getElementById('f_conditions').value}
+Available Tee Times: ${document.getElementById('f_teetimes').value}
+Booking Policies: ${document.getElementById('f_policies').value}
+Preferred Tone: ${document.getElementById('f_tone').value}
+Special Notes: ${document.getElementById('f_notes').value}
+  `.trim();
+
+  const prompt = `You are helping build an AI phone receptionist for a golf course. Given the course info below, generate a complete AI profile in JSON format.
+
+COURSE INFO:
+${courseInfo}
+
+Generate JSON with exactly this structure:
+{
+  "persona": {
+    "name": "a friendly first name for the AI receptionist",
+    "fullTitle": "Name — AI Receptionist, Course Name",
+    "tagline": "a short catchy tagline (under 10 words)",
+    "description": "2-3 sentence description of this receptionist's personality and approach",
+    "traits": ["trait1", "trait2", "trait3", "trait4", "trait5"]
+  },
+  "faqs": [
+    {"q": "question", "a": "detailed answer using actual course data"},
+    {"q": "question", "a": "answer"},
+    {"q": "question", "a": "answer"},
+    {"q": "question", "a": "answer"},
+    {"q": "question", "a": "answer"},
+    {"q": "question", "a": "answer"}
+  ],
+  "bookingScript": "full booking conversation script with opening, gather info, present options, close, confirmation sections",
+  "upsellScript": "upsell script covering club rentals, range, dining, membership",
+  "systemPrompt": "complete system prompt (200-300 words) to configure the AI phone receptionist with all course details, pricing, policies, and behavior guidelines"
+}
+
+Return ONLY valid JSON, no explanation. Use actual numbers and details from the course info.`;
+
+  try {
+    streamText.textContent = 'Claude is crafting your AI persona...';
+
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-opus-4-6',
+        max_tokens: 4096,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json();
+      throw new Error(err.error?.message || `API error ${resp.status}`);
     }
-    const chunk = words.slice(i, i + 3).join('');
-    i += 3;
-    bubble.innerHTML = escHtml(text.slice(0, i));
-    t.scrollTop = t.scrollHeight;
-    setTimeout(next, speed);
+
+    const data = await resp.json();
+    const rawText = data.content[0].text;
+
+    streamText.textContent = 'Parsing and rendering...';
+
+    // Extract JSON from response
+    const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('Could not parse JSON from Claude response');
+
+    const parsed = JSON.parse(jsonMatch[0]);
+    renderOutput(parsed);
+    showToast('✅ AI Receptionist generated! Explore the tabs.');
+
+  } catch(e) {
+    showToast('❌ Error: ' + e.message, 5000);
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '⚡ Generate AI Receptionist';
+    bar.classList.remove('show');
   }
-  next();
 }
 
-function showTypingBubble() {
-  const t = document.getElementById('transcript');
-  const el = document.createElement('div');
-  el.className = 'msg ai typing';
-  el.id = 'typing-el';
-  el.innerHTML = '<div class="msg-who">🤖 Golf.ai AI</div><div class="bubble"><div class="td"></div><div class="td"></div><div class="td"></div></div>';
-  t.appendChild(el);
-  t.scrollTop = t.scrollHeight;
-}
+// ─── RENDER OUTPUT ────────────────────────────────────
+function renderOutput(data) {
+  generatedData = data;
+  systemPrompt = data.systemPrompt;
+  chatHistory = [];
 
-function removeTyping() {
-  const el = document.getElementById('typing-el');
-  if (el) el.remove();
-}
-
-function appendMsg(role, text) {
-  const t = document.getElementById('transcript');
-  const el = document.createElement('div');
-  el.className = `msg ${role}`;
-  el.innerHTML = `<div class="msg-who">${role==='caller'?'📞 Caller':'🤖 Golf.ai AI'}</div><div class="bubble">${escHtml(text)}</div>`;
-  t.appendChild(el);
-  t.scrollTop = t.scrollHeight;
-}
-
-function addSysLine(text) {
-  const t = document.getElementById('transcript');
-  const el = document.createElement('div');
-  el.className = 'sys-line';
-  el.textContent = text;
-  t.appendChild(el);
-  t.scrollTop = t.scrollHeight;
-}
-
-// ── BOOKING DETECTION ────────────────────────────────────────────────────────
-function checkBooking(s) {
-  if (!s.conf) return;
-  sessionBookings++;
-  document.getElementById('sv-book').textContent = 12 + sessionBookings;
-
-  // Remove empty state
-  const empty = document.getElementById('bookEmpty');
-  if (empty) empty.remove();
-
-  // Add booking card
-  const list = document.getElementById('bookList');
-  const el = document.createElement('div');
-  el.className = 'book-item new';
-  const init = s.num.replace(/\D/g,'').slice(-4,-2);
-  el.innerHTML = `
-    <div class="bav">${init}</div>
-    <div class="bi">
-      <div class="bn">${s.name} · ${s.num}</div>
-      <div class="bd2">📅 ${s.teeTime||'TBD'} · 👥 ${s.players||'?'} player${s.players!=='1'?'s':''}</div>
+  // PERSONA
+  document.getElementById('persona-empty').style.display = 'none';
+  const po = document.getElementById('persona-output');
+  po.style.display = 'block';
+  po.innerHTML = `
+    <div class="output-block">
+      <h3>AI Receptionist Profile</h3>
+      <div class="persona-name">${data.persona.name}</div>
+      <div class="persona-tagline">"${data.persona.tagline}"</div>
+      <div class="persona-desc">${data.persona.description}</div>
+      <div class="traits">${data.persona.traits.map(t=>`<span class="trait">${t}</span>`).join('')}</div>
     </div>
-    <div class="bc">${s.conf}</div>`;
-  list.prepend(el);
+    <div class="output-block">
+      <h3>System Prompt Preview</h3>
+      <div class="persona-desc" style="font-size:0.82rem;white-space:pre-wrap;line-height:1.6">${data.systemPrompt.substring(0,300)}...</div>
+      <button class="copy-btn" onclick="copyText(\`${data.systemPrompt.replace(/`/g,'\\`')}\`, this)" style="float:none;margin-top:0.8rem">Copy Full Prompt</button>
+    </div>
+  `;
 
-  // Flash tee sheet row
-  const teeMatch = tees.find(t => t.time === s.teeTime && t.spots > 0);
-  if (teeMatch) {
-    teeMatch.spots = Math.max(0, teeMatch.spots - parseInt(s.players || 1));
-    renderTees();
+  // FAQs
+  document.getElementById('faq-empty').style.display = 'none';
+  const fo = document.getElementById('faq-output');
+  fo.style.display = 'block';
+  fo.innerHTML = `
+    <div class="output-block">
+      <h3>${data.faqs.length} Auto-Generated FAQs</h3>
+      ${data.faqs.map(f=>`
+        <div class="faq-item">
+          <div class="faq-q">Q: ${f.q}</div>
+          <div class="faq-a">A: ${f.a}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  // SCRIPTS
+  document.getElementById('scripts-empty').style.display = 'none';
+  const so = document.getElementById('scripts-output');
+  so.style.display = 'block';
+  so.innerHTML = `
+    <div class="output-block">
+      <h3>📞 Booking Script</h3>
+      <button class="copy-btn" onclick="copyText(this.nextElementSibling.textContent, this)">Copy</button>
+      <div class="script-block">${data.bookingScript}</div>
+    </div>
+    <div class="output-block">
+      <h3>💰 Upsell Script</h3>
+      <button class="copy-btn" onclick="copyText(this.nextElementSibling.textContent, this)">Copy</button>
+      <div class="script-block">${data.upsellScript}</div>
+    </div>
+  `;
+
+  // CHAT — unlock
+  document.getElementById('chat-locked').style.display = 'none';
+  document.getElementById('chat-active').style.display = 'flex';
+  document.getElementById('chat-avatar').textContent = data.persona.name[0];
+  document.getElementById('chat-persona-name').textContent = data.persona.fullTitle;
+  document.getElementById('chatMessages').innerHTML = '';
+
+  // Add greeting
+  addAIMessage(`Hi there! Thanks for calling ${document.getElementById('f_name').value || 'our golf course'}! This is ${data.persona.name} — how can I help you today? Are you looking to book a tee time, or do you have questions about our course?`);
+}
+
+// ─── LIVE CHAT ────────────────────────────────────────
+function sendQuick(btn) {
+  document.getElementById('chatInput').value = btn.textContent;
+  sendChat();
+}
+
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+
+  addUserMessage(msg);
+  chatHistory.push({ role: 'user', content: msg });
+
+  const sendBtn = document.getElementById('sendBtn');
+  sendBtn.disabled = true;
+
+  // Show typing
+  const typingId = 'typing-' + Date.now();
+  const msgs = document.getElementById('chatMessages');
+  msgs.innerHTML += `<div class="msg ai typing" id="${typingId}"><div class="typing-dots"><span></span><span></span><span></span></div></div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+
+  try {
+    if (isDemo || !apiKey) {
+      // Demo mode — simulate response
+      await new Promise(r => setTimeout(r, 1200));
+      document.getElementById(typingId)?.remove();
+      const demoReply = getDemoReply(msg);
+      addAIMessage(demoReply);
+      chatHistory.push({ role: 'assistant', content: demoReply });
+    } else {
+      // Live Claude
+      const resp = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-opus-4-6',
+          max_tokens: 512,
+          system: systemPrompt,
+          messages: chatHistory
+        })
+      });
+
+      document.getElementById(typingId)?.remove();
+
+      if (!resp.ok) {
+        const err = await resp.json();
+        throw new Error(err.error?.message || 'API error');
+      }
+
+      const data = await resp.json();
+      const reply = data.content[0].text;
+      addAIMessage(reply);
+      chatHistory.push({ role: 'assistant', content: reply });
+    }
+  } catch(e) {
+    document.getElementById(typingId)?.remove();
+    addAIMessage('Sorry, I had a technical issue. Please try again!');
+    console.error(e);
+  } finally {
+    sendBtn.disabled = false;
+    input.focus();
   }
+}
+
+function addUserMessage(text) {
+  const msgs = document.getElementById('chatMessages');
+  msgs.innerHTML += `<div class="msg user">${escHtml(text)}</div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addAIMessage(text) {
+  const msgs = document.getElementById('chatMessages');
+  msgs.innerHTML += `<div class="msg ai">${escHtml(text)}</div>`;
+  msgs.scrollTop = msgs.scrollHeight;
 }
 
 function escHtml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
 }
+
+// Demo chat replies
+function getDemoReply(msg) {
+  const m = msg.toLowerCase();
+  if (m.includes('price') || m.includes('rate') || m.includes('cost') || m.includes('fee')) {
+    return "Great question! Our weekday rates are $95/person with cart included — a fantastic deal for our championship course. Weekends are $135. If you can play after 2 PM, twilight rates start at just $65, and super twilight after 4 PM is only $45. Are you thinking weekday or weekend?";
+  }
+  if (m.includes('time') || m.includes('today') || m.includes('available') || m.includes('booking') || m.includes('book')) {
+    return "Absolutely! Today we have openings at 10:00 AM with 4 spots, 1:00 PM with 4 spots, and twilight times at 2:30 and 4:00 PM. How many players in your group, and which time sounds good?";
+  }
+  if (m.includes('club') || m.includes('rent')) {
+    return "Yes! We have premium Titleist club rentals for $55/set — same clubs our members play. Just let us know when you arrive and the pro shop will get you set up. The pro shop opens at 6:00 AM.";
+  }
+  if (m.includes('group') || m.includes('corporate') || m.includes('event')) {
+    return "For groups of 8 or more, you qualify for our 10% corporate discount. We also have beautiful private event spaces for tournaments and corporate outings. Want me to connect you with our events coordinator for a custom quote?";
+  }
+  if (m.includes('condition') || m.includes('weather') || m.includes('course')) {
+    return "Conditions are excellent today! It's 82°F and sunny with just a light breeze. The greens are running fast at stimpmeter 11.2 and the fairways were freshly mowed this morning. Perfect golf weather — you're going to love it!";
+  }
+  if (m.includes('cancel')) {
+    return "We have a 24-hour cancellation policy. As long as you cancel at least 24 hours before your tee time, you'll receive a full refund — no questions asked. Want me to go ahead and book you in?";
+  }
+  return "That's a great question! I'd love to help with that. To make sure I give you the most accurate information, could you tell me a bit more about what you're looking for? Are you interested in booking a tee time, asking about pricing, or something else?";
+}
+
+// ─── INIT ─────────────────────────────────────────────
+// Show modal on load (it's already visible via CSS)
+document.getElementById('chatInput') && document.getElementById('chatInput').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') sendChat();
+});
 </script>
 </body>
 </html>
